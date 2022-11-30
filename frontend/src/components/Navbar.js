@@ -1,6 +1,38 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import axios from 'axios';
+import Cookies from 'universal-cookie';
 
 function Navbar() {
+    const cookies = new Cookies();
+    const token = cookies.get('_token');
+    const [stat, setStat] = useState('not found');
+
+    useEffect(() => {
+        status();
+        if (stat == 'not found') {
+            cookies.remove('_name');
+        }
+    })
+    
+    const config = {
+        headers: {
+            "Authorization": `Bearer ${token}`,
+        }
+    }
+
+    const _name = cookies.get('_name');
+    const url = 'http://localhost:8000/api/v1/status/'+_name;
+
+    const status = async () => {
+        try {
+            await axios.get(url, config).then(response => {
+                console.log(response);
+                setStat(response.data.data.status);
+            })
+        } catch (error) {
+            console.log(error.data);
+        }
+    }
     return (
         <nav className="navbar is-light" role="navigation" aria-label="main navigation">
             <div className="container">
@@ -24,9 +56,15 @@ function Navbar() {
                         <a href="/session" className="navbar-item">
                             Session
                         </a>
+                        <a href="/send" className="navbar-item">
+                            Send
+                        </a>
                     </div>
  
                     <div className="navbar-end">
+                        <div className="navbar-item">
+                            Status : {stat}
+                        </div>
                         <div className="navbar-item">
                             <div className="buttons">
                                 <button className="button is-light">
