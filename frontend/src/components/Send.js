@@ -22,13 +22,18 @@ function Send() {
         }
     }
 
+    const params = {
+        params: {
+            "id": _name,
+        }
+    }
+
     const send = async () => {
         console.log(receiver);
+        const url = 'http://localhost:8000/api/v1/chats/send?id='+_name;
         try {
-            await axios.post('http://localhost:8000/api/v1/chats/send', {body}, {
-                params: {id: _name}
-            }, config).then(response=>{
-                console.log(response.data);
+            await axios.post(url, body, config).then(response=>{
+                console.log('success');
             })
         } catch (e) {
             console.log(e);

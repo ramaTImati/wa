@@ -9,9 +9,6 @@ function Navbar() {
 
     useEffect(() => {
         status();
-        if (stat == 'not found') {
-            cookies.remove('_name');
-        }
     })
     
     const config = {
@@ -55,6 +52,9 @@ function Navbar() {
                         </a>
                         <a href="/session" className="navbar-item">
                             Session
+                        </a>
+                        <a href="/chat" className="navbar-item">
+                            Chat
                         </a>
                         <a href="/send" className="navbar-item">
                             Send
