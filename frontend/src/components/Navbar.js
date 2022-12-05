@@ -23,7 +23,7 @@ function Navbar() {
     const status = async () => {
         try {
             await axios.get(url, config).then(response => {
-                console.log(response);
+                // console.log(response);
                 setStat(response.data.data.status);
             })
         } catch (error) {
