@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Router, Routes } from "react-router-dom";
 import Chat from "./components/Chat";
+import Conversation from "./components/Conversation";
 import Dashboard from "./components/Dashboard";
 import Login from "./components/Login";
 import Navbar from "./components/Navbar";
@@ -17,6 +18,7 @@ function App() {
         <Route path="/session" element={<><Navbar/> <Session/> </>} />
         <Route path="/send" element={<><Navbar/> <Send/></>} />
         <Route path="/chat" element={<><Navbar/> <Chat/></>} />
+        <Route path="/conversation/:num" element={<><Navbar/> <Conversation/></>}/>
       </Routes>
     </BrowserRouter>
   );

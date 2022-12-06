@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react'
 import Cookies from 'universal-cookie';
+import { Link } from 'react-router-dom';
 
 function Chat() {
     const [fetc, setFetc] = useState([]); 
@@ -23,9 +24,6 @@ function Chat() {
         try {
             await axios.get(url, config).then(response=>{
                 setFetc(response.data.data);
-                console.log(response.data.data[1]);
-                console.log('success');
-                // console.log(fetc);
             })
         } catch (e) {
             console.log(e)
@@ -35,17 +33,25 @@ function Chat() {
     return (
         <div className='container mt-5'>
             <h4 className='is-size-4'>Chat</h4>
-            <table className='table'>
-                {fetc.map(data=>(
-                <tr key={data.id}>
-                    <td>
-                        <b>{data.id.replace('@s.whatsapp.net', '')}</b><br/>
-                        {data.messages && data.messages.map(msg=>(
-                            <p key={msg.message.key.id}>{msg.message.key.id}</p>
-                        ))} 
-                    </td>
-                </tr>
-                ))}
+            <hr style={{
+            color: '#000',
+            backgroundColor: '#000',
+        }}/>
+            <table className='table is-fullwidth is-hoverable'>
+                <tbody>
+                    {fetc.map(data=>(
+                    <tr key={data.id}>
+                        <Link to={`/conversation/${data.id}`}>
+                            <td>
+                                <b>{data.id.replace('@s.whatsapp.net', '')}</b><br/>
+                                {data.messages && data.messages.map(msg=>(
+                                    <p key={msg.message.key.id}>{msg.message.messageTimestamp}</p>
+                                ))} 
+                            </td>
+                        </Link>
+                    </tr>
+                    ))}
+                </tbody>
             </table>
             
         </div>
