@@ -5,9 +5,8 @@ import Cookies from 'universal-cookie';
 function Send() {
     const [receiver, setReceiver] = useState();
     const [msg, setMsg] = useState();
-    const cookies = new Cookies();
-    const _name = cookies.get('_name');
-    const _token = cookies.get('_token');
+    const _name = sessionStorage.getItem('_name');
+    const _token = sessionStorage.getItem('_token');
 
     const body = {
         receiver: receiver, 
@@ -22,17 +21,10 @@ function Send() {
         }
     }
 
-    const params = {
-        params: {
-            "id": _name,
-        }
-    }
-
     const send = async () => {
-        console.log(receiver);
         const url = 'http://localhost:8000/api/v1/chats/send?id='+_name;
         try {
-            await axios.post(url, body, config).then(response=>{
+            axios.post(url, body, config).then(response=>{
                 console.log('success');
             })
         } catch (e) {

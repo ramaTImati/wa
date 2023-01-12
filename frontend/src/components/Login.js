@@ -8,7 +8,7 @@ const Login = () => {
     const [msg, setMsg] = useState('');
     const navigate = useNavigate();
  
-    let token;
+    let _token;
     const Auth = async (e) => {
         e.preventDefault();
         try {
@@ -16,9 +16,10 @@ const Login = () => {
                 email: email,
                 password: password
             }).then(response=>{
-                token = response.data.data.token
+                _token = response.data.data.token;
+                sessionStorage.setItem('_token', _token);
             });
-            navigate("/dashboard", {state: token});
+            navigate("/dashboard");
         } catch (error) {
             if (error.response) {
                 setMsg(error.response.data.msg);

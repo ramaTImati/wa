@@ -4,8 +4,7 @@ import Cookies from 'universal-cookie';
 
 function Session() {
     const [name, setName] = useState('');
-    const cookies = new Cookies();
-    const token = cookies.get('_token');
+    const _token = sessionStorage.getItem('_token');
     const [msg, setMsg] = useState('');
     const [Qr, setQr] = useState('');
     const [stat, setStat] = useState('not found');
@@ -16,7 +15,7 @@ function Session() {
     
     const config = {
         headers: {
-            "Authorization": `Bearer ${token}`,
+            "Authorization": `Bearer ${_token}`,
         }
     }
     const gen = async () => {
@@ -28,7 +27,7 @@ function Session() {
                 // console.log(response.data);
                 setMsg(response.data.message);
                 setQr(response.data.data.qr);
-                cookies.set('_name', name, {path:'/'});
+                sessionStorage.setItem('_name', name);
                 // status();
             });
         } catch (error) {
@@ -36,13 +35,12 @@ function Session() {
         }
     }
 
-    const _name = cookies.get('_name');
+    const _name = sessionStorage.getItem('_name')
     const url = 'http://localhost:8000/api/v1/status/'+_name;
 
     const status = async () => {
         try {
             await axios.get(url, config).then(response => {
-                console.log(response);
                 setStat(response.data.data.status);
             })
         } catch (error) {

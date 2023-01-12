@@ -6,8 +6,8 @@ import axios from 'axios';
 
 function Conversation() {
     const cookies = new Cookies();
-    const _name = cookies.get('_name');
-    const _token = cookies.get('_token');
+    const _name = sessionStorage.getItem('_name');
+    const _token = sessionStorage.getItem('_token');
     const {num} = useParams();
     const [msg, setMsg] = useState([]);
 
@@ -23,7 +23,7 @@ function Conversation() {
             }
         }
         try {
-            await axios.get(url, config).then(response=>{
+            axios.get(url, config).then(response=>{
                 // console.log(response.data);
                 setMsg(response.data.data);
             })
@@ -44,24 +44,75 @@ function Conversation() {
         }}/>
             {/* <table className='table'> */}
                 {msg.map((data)=>{
-                    if(data.messageStubType != 'CALL_MISSED_VOICE'){
+                    if(data.hasOwnProperty('message')){
+                        const pesan = data.message;
                         if(data.key.fromMe == false){
+                            if (data.hasOwnProperty('extendedTextMessage')) {
+                                return (
+                                    <div className='columns' key={data.messageTimestamp}>
+                                        <div className='column'>
+                                            <span className="tag is-info is-large">
+                                                <p>
+                                                    {pesan.extendedTextMessage.text}
+                                                </p>
+                                            </span>
+                                        </div>
+                                        <div className='column'></div>
+                                    </div>
+                                )
+                            }else{
+                                return (
+                                    <div className='columns' key={data.messageTimestamp}>
+                                        <div className='column'>
+                                            <span className="tag is-info is-large">{pesan.conversation}</span>
+                                        </div>
+                                        <div className='column'></div>
+                                    </div>
+                                )
+                            }
+                        }else{
+                            if (pesan.hasOwnProperty('extendedTextMessage')) {
+                                return (
+                                    <div className='columns' key={data.messageTimestamp}>
+                                        <div className='column'></div>
+                                        <div className='column'>
+                                            <span className="tag is-primary is-pulled-right	is-large">
+                                                <p>
+                                                    {pesan.extendedTextMessage.text}
+                                                </p>
+                                            </span>
+                                        </div>
+                                    </div>
+                                )
+                            }else{
+                                return (
+                                    <div className='columns' key={data.messageTimestamp}>
+                                        <div className='column'></div>
+                                        <div className='column'>
+                                            <span className="tag is-primary is-pulled-right	is-large">{data.message.conversation}</span>
+                                        </div>
+                                    </div>
+                                )
+                            }
+                        }
+                    }else{
+                        if (data.key.fromMe == false) {
                             return (
-                            <div className='columns' key={data.messageTimestamp}>
-                                <div className='column'>
-                                    <span className="tag is-primary is-large">{data.message.conversation}</span>
+                                <div className='columns' key={data.messageTimestamp}>
+                                    <div className='column'>
+                                        <span className="tag is-warning	is-large">{data.messageStubType}</span>
+                                    </div>
+                                    <div className='column'></div>
                                 </div>
-                                <div className='column'></div>
-                            </div>
                             )
                         }else{
                             return (
-                            <div className='columns' key={data.messageTimestamp}>
-                                <div className='column'></div>
-                                <div className='column'>
-                                    <span className="tag is-primary is-pulled-right	is-large">{data.message.conversation}</span>
+                                <div className='columns' key={data.messageTimestamp}>
+                                    <div className='column'></div>
+                                    <div className='column'>
+                                        <span className="tag is-warning is-pulled-right	is-large">{data.messageStubType}</span>
+                                    </div>
                                 </div>
-                            </div>
                             )
                         }
                     }

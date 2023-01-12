@@ -1,15 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import axios from "axios";
-import { useLocation, useNavigate } from 'react-router-dom';
-import Cookies from 'universal-cookie';
 
 function Dashboard() {
-    const token = useLocation();
+    const _token = sessionStorage.getItem('_token');
     const [name, setName] = useState('');
-    const [users, setUsers] = useState([]);
-    const navigate = useNavigate();
-    const cookies = new Cookies();
-    cookies.set('_token', token.state, {path:'/'});
 
     useEffect(() => {
         user();
@@ -18,7 +12,7 @@ function Dashboard() {
     const user = async () => {
         try {
             await axios.get('http://localhost:8000/api/users/getMe', {
-                headers: {"Authorization": `Bearer ${token.state}`}
+                headers: {"Authorization": `Bearer ${_token}`}
             }).then(response=>{
                 setName(response.data.data.username);
             });
